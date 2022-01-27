@@ -73,7 +73,7 @@ async def main(msg: types.Message):
             await bot.send_photo(msg.from_user.id, photo = out)
     elif text == "гиу!":
         with open(f"1.jpg", "wb") as out:
-            photo = req.get(f"http://{url_dogs[random.randint(0, len(url_cats)) - 1]}").content
+            photo = req.get(f"http://{url_dogs[random.randint(0, len(url_dogs)) - 1]}").content
             out.write(photo)
         with open("1.jpg", 'rb') as out:
             await bot.send_photo(msg.from_user.id, photo = out)
