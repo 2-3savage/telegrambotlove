@@ -80,7 +80,6 @@ async def main(msg: types.Message):
         with open(f"{random.randint(0, len(url_cats) - 1)}.jpg", 'rb') as out:
             await bot.send_photo(msg.from_user.id, photo = out)
     elif text == "гиу!":
-        print((len(url_cats) - 1, len(url_cats) + len(url_dogs) - 3))
         with open(f"{random.randint(len(url_cats) - 1, len(url_cats) - 1 + len(url_dogs) - 1)}.jpg", 'rb') as out:
             await bot.send_photo(msg.from_user.id, photo = out)
     else:
