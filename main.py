@@ -52,7 +52,7 @@ def get_text(url, headers) -> List:
 
 @dp.message_handler(state='*', commands='start')
 async def process_start_command(msg: types.Message):
-    await msg.reply("привет, пупс, нажимай на кнопку и получай любовь", reply_markup=menu_user)
+    await msg.reply("привет, пупс, нажимай на кнопку и получай любовь 💖", reply_markup=menu_user)
 
 
 @dp.message_handler(state='*', content_types=["text"])
@@ -71,14 +71,12 @@ async def main(msg: types.Message):
             out.write(photo)
         with open("1.jpg", 'rb') as out:
             await bot.send_photo(msg.from_user.id, photo = out)
-            os.remove("1.jpg")
     elif text == "гиу!":
         with open(f"1.jpg", "wb") as out:
             photo = req.get(f"http://{url_dogs[random.randint(0, len(url_cats)) - 1]}").content
             out.write(photo)
         with open("1.jpg", 'rb') as out:
             await bot.send_photo(msg.from_user.id, photo = out)
-            os.remove("1.jpg")
     else:
         await bot.send_message(msg.from_user.id, "ты пупс дурак шоле, для кого кнопка а???")
 
