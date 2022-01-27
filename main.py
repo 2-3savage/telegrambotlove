@@ -28,12 +28,23 @@ async def shutdown(dispatcher: Dispatcher):
 def images(url):
     r = req.get(url)
     b = soup(r.content, "html.parser")
-    image = b.find_all("img", class_ = 'serp-item__thumb justifier__thumb')
+    image = b.find_all("div", class_ = 'img-in-full')
     images = []
     for i in image:
-        images.append(i.get("src")[2:])
+        images.append(f"http://oir.mobi{i.find('img').get('data-src')}")
     return images
 
+url_cats = images("https://oir.mobi/668922-vljublennye-koshki.html")
+url_dogs = images("https://oir.mobi/674797-schastlivyj-labrador.html")
+a = len(url_cats) - 1
+for i in range(len(url_cats)-1):
+    with open(f"{i}.jpg", "wb") as out:
+        photo = req.get(f"{url_cats[random.randint(0, len(url_cats)) - 1]}").content
+        out.write(photo)
+for i in range(a, a + len(url_dogs)-1):
+    with open(f"{i}.jpg", "wb") as out:
+        photo = req.get(f"{url_dogs[random.randint(0, len(url_dogs)) - 1]}").content
+        out.write(photo)
 
 def get_text(url, headers) -> List:
     """Парсинг фраз"""
@@ -57,25 +68,20 @@ async def process_start_command(msg: types.Message):
 
 @dp.message_handler(state='*', content_types=["text"])
 async def main(msg: types.Message):
-    url_cats = images("https://yandex.ru/images/search?text=%D0%BC%D0%B8%D0%BB%D1%8B%D0%B5%20%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD%D0%BA%D0%B8%20%D0%BB%D1%8E%D0%B1%D0%BE%D0%B2%D0%BD%D1%8B%D0%B5%20%D0%BA%D0%BE%D1%82%D1%8F%D1%82%D0%B0&lr=62")
+    url_cats = images("https://oir.mobi/668922-vljublennye-koshki.html")
     phrases = get_text('https://mensby.com/women/relations/300-krasivyh-slov-devushke-luchshie-komplimenty-devushke', {
     "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36 OPR/82.0.4227.50 (Edition Yx GX 03)"
 })
-    url_dogs = images("https://yandex.ru/images/search?from=tabbar&text=%D0%BC%D0%B8%D0%BB%D1%8B%D0%B5%20%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD%D0%BA%D0%B8%20%D1%81%20%D1%81%D0%BE%D0%B1%D0%B0%D1%87%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BB%D1%8E%D0%B1%D0%BE%D0%B2%D1%8C")
+    url_dogs = images("https://oir.mobi/674797-schastlivyj-labrador.html")
     text = msg.text.lower()
     if text == "виу!":
         await bot.send_message(msg.from_user.id, phrases[random.randint(0, len(phrases) - 1)])
     elif text == "миу!":
-        with open(f"1.jpg", "wb") as out:
-            photo = req.get(f"http://{url_cats[random.randint(0, len(url_cats)) - 1]}").content
-            out.write(photo)
-        with open("1.jpg", 'rb') as out:
+        with open(f"{random.randint(0, len(url_cats) - 1)}.jpg", 'rb') as out:
             await bot.send_photo(msg.from_user.id, photo = out)
     elif text == "гиу!":
-        with open(f"1.jpg", "wb") as out:
-            photo = req.get(f"http://{url_dogs[random.randint(0, len(url_dogs)) - 1]}").content
-            out.write(photo)
-        with open("1.jpg", 'rb') as out:
+        print((len(url_cats) - 1, len(url_cats) + len(url_dogs) - 3))
+        with open(f"{random.randint(len(url_cats) - 1, len(url_cats) - 1 + len(url_dogs) - 1)}.jpg", 'rb') as out:
             await bot.send_photo(msg.from_user.id, photo = out)
     else:
         await bot.send_message(msg.from_user.id, "ты пупс дурак шоле, для кого кнопка а???")
