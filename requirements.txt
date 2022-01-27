@@ -1,0 +1,6 @@
+telebot
+aiogram
+requests
+bs4
+BeautifulSoup
+random
